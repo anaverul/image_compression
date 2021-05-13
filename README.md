@@ -7,7 +7,7 @@ This software provides a tool to compress .png, .jpg and .gif files. To run, mak
 * **sklearn**
 * **Tkinter**
 *  **PIL**
-*  **itertools*
+*  **itertools**
 *  **time**
 *  **shutil**
 *  **numpy**
