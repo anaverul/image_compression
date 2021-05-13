@@ -6,9 +6,9 @@ import compress
 from PIL import Image, ImageTk
 from itertools import count, cycle
 
-img = ''
-root = Tk()
-text_1 = StringVar()
+img = '' #image to be processed
+root = Tk() #initializing root
+display_text = StringVar()
 
 class ImageLabel(tk.Label):
     """
@@ -39,57 +39,76 @@ class ImageLabel(tk.Label):
             self.next_frame()
 
     def unload(self):
-        self.config(image=None)
+        self.config(image = None)
         self.frames = None
 
     def next_frame(self):
         if self.frames:
-            self.config(image=next(self.frames))
+            self.config(image = next(self.frames))
             self.after(self.delay, self.next_frame)
 
 
 def browse_image():
+    """lets the user browse and pick an image file
+    Accepted extensions are: .jpg, .png, .gif
+
+    Parameters
+    ----------
+    No parameters
+    Returns
+    -------
+    No returns
+    """
     global img
     global img_read
     filename = filedialog.askopenfilename(initialdir = os.getcwd(), title = "Browse Image File", filetypes = (("GIF Image", "*gif"), ("JPG Image", "*jpg"), ("PNG Image", "*png")))
-    text_1.set(filename)
+    display_text.set(filename)
     img = filename
 
 def pixelate_image():
+    """pixelates image selected by user
+
+    Parameters
+    ----------
+    No parameters
+    Returns
+    -------
+    No returns
+    """
     if img.endswith(".gif"):
         compress.gif_compressor(img)
-        lbl.load("compressed.gif")
+        display_image_label.load("compressed.gif")
     else:
         compress.pixelate(img)
-        lbl.load(img)
+        display_image_label.load(img)
 
- 
-lbl = ImageLabel(root)
-lbl.pack()
+
+display_image_label = ImageLabel(root)
+display_image_label.pack()
 
 #----------------------------------------------------------------------------
 
-wrapper = LabelFrame(root, text = "Source File")
-wrapper.pack(fill = "both", expand = "yes", padx = 20, pady = 20)
+wrapper_source_file = LabelFrame(root, text = "Source File")
+wrapper_source_file.pack(fill = "both", expand = "yes", padx = 20, pady = 20)
 
-label = LabelFrame(root, text = "Source File")
-label.pack(side = tk.LEFT, padx = 10, pady = 10)
+label_source_file = LabelFrame(root, text = "Source File")
+label_source_file.pack(side = tk.LEFT, padx = 10, pady = 10)
 
-entry = Entry(wrapper, textvariable = text_1)
-entry.pack(side = tk.LEFT, padx = 10, pady = 10)
+entry_source_file = Entry(wrapper_source_file, textvariable = display_text)
+entry_source_file.pack(side = tk.LEFT, padx = 10, pady = 10)
 
-button = Button(wrapper, text = "Browse", command = browse_image)
-button.pack(side = tk.LEFT, padx=10, pady= 10)
+button_source_file = Button(wrapper_source_file, text = "Browse", command = browse_image)
+button_source_file.pack(side = tk.LEFT, padx=10, pady= 10)
 
 #--------------------------------------------------------------------------
-wrapper2 = LabelFrame(root, text = "Process")
-wrapper2.pack(fill = "both", expand = "yes", padx = 20, pady = 20)
+wrapper_compressing = LabelFrame(root, text = "Process")
+wrapper_compressing.pack(fill = "both", expand = "yes", padx = 20, pady = 20)
 
-label2 = LabelFrame(root, text = "Process")
-label2.pack(side = tk.LEFT, padx = 10, pady = 10)
+label_compressing = LabelFrame(root, text = "Process")
+label_compressing.pack(side = tk.LEFT, padx = 10, pady = 10)
 
-button2 = Button(wrapper2, text = "Compress", command = pixelate_image)
-button2.pack(side = tk.LEFT, padx=10, pady= 10)
+button_compressing = Button(wrapper_compressing, text = "Compress", command = pixelate_image)
+button_compressing.pack(side = tk.LEFT, padx=10, pady= 10)
 
 root.title("Image compressor")
 root.geometry("500x300")
